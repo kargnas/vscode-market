@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VSCode Market</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>VSCode Market</h1>
+      <p>Private registry of VS Code extensions published under the kargnas organization.</p>
+      <button id="refresh-button" type="button">Refresh</button>
+    </header>
+    <main>
+      <section aria-live="polite" id="status" class="status">Loading extensions…</section>
+      <section id="extensions" class="grid" hidden></section>
+    </main>
+    <template id="extension-card">
+      <article class="card">
+        <header>
+          <img class="icon" alt="" loading="lazy" />
+          <div>
+            <h2 class="title"></h2>
+            <p class="meta"></p>
+          </div>
+        </header>
+        <p class="description"></p>
+        <dl class="details">
+          <div>
+            <dt>Version</dt>
+            <dd class="version"></dd>
+          </div>
+          <div>
+            <dt>Last Updated</dt>
+            <dd class="updated"></dd>
+          </div>
+        </dl>
+        <footer class="actions">
+          <a class="download" target="_blank" rel="noopener">Download VSIX</a>
+          <a class="readme" target="_blank" rel="noopener">See README</a>
+        </footer>
+      </article>
+    </template>
+    <script type="module">
+      const statusEl = document.getElementById('status');
+      const container = document.getElementById('extensions');
+      const template = document.getElementById('extension-card');
+      const refreshButton = document.getElementById('refresh-button');
+
+      const formatDate = (value) => {
+        if (!value) return '—';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString();
+      };
+
+      const renderExtensions = (extensions) => {
+        container.innerHTML = '';
+        if (!extensions.length) {
+          statusEl.textContent = 'No extensions available yet.';
+          container.hidden = true;
+          return;
+        }
+        const fragment = document.createDocumentFragment();
+        for (const extension of extensions) {
+          const version = extension.versions?.[0];
+          const clone = template.content.cloneNode(true);
+          const card = clone.querySelector('.card');
+          card.dataset.extensionId = extension.extensionId;
+          clone.querySelector('.title').textContent = extension.displayName || extension.extensionName;
+          clone.querySelector('.meta').textContent = `${extension.publisher.displayName} · ${extension.extensionName}`;
+          clone.querySelector('.description').textContent = extension.shortDescription ?? '';
+          clone.querySelector('.version').textContent = version?.version ?? '—';
+          clone.querySelector('.updated').textContent = formatDate(version?.lastUpdated ?? extension.lastUpdated);
+
+          const iconFile = version?.files?.find((file) => file.assetType.includes('Icon'));
+          const downloadFile = version?.files?.find((file) => file.assetType.includes('VSIXPackage'));
+          const readmeFile = version?.files?.find((file) => file.assetType.includes('Content.Details') && file.source.toLowerCase().includes('readme'));
+
+          const iconEl = clone.querySelector('.icon');
+          if (iconFile) {
+            iconEl.src = iconFile.source;
+            iconEl.hidden = false;
+          } else {
+            iconEl.hidden = true;
+          }
+
+          const downloadEl = clone.querySelector('.download');
+          if (downloadFile) {
+            downloadEl.href = downloadFile.source;
+          } else {
+            downloadEl.remove();
+          }
+
+          const readmeEl = clone.querySelector('.readme');
+          if (readmeFile) {
+            readmeEl.href = readmeFile.source;
+          } else {
+            readmeEl.remove();
+          }
+
+          fragment.appendChild(clone);
+        }
+        container.appendChild(fragment);
+        container.hidden = false;
+        statusEl.textContent = `${extensions.length} extension${extensions.length > 1 ? 's' : ''} available.`;
+      };
+
+      const fetchExtensions = async () => {
+        statusEl.textContent = 'Loading extensions…';
+        try {
+          const response = await fetch('index.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          renderExtensions(data.extensions ?? []);
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = 'Failed to load extensions. Please try again later.';
+          container.hidden = true;
+        }
+      };
+
+      refreshButton.addEventListener('click', () => {
+        fetchExtensions();
+      });
+
+      fetchExtensions();
+    </script>
+  </body>
+</html>

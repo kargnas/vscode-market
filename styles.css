@@ -1,0 +1,155 @@
+:root {
+	color-scheme: light dark;
+	font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+		sans-serif;
+	background-color: canvas;
+	color: canvastext;
+	line-height: 1.5;
+}
+
+body {
+	margin: 0;
+	padding: 0 1rem 3rem;
+}
+
+.hero {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 2rem 0 1rem;
+}
+
+.hero h1 {
+	margin: 0;
+	font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.hero p {
+	margin: 0;
+	max-width: 38rem;
+}
+
+.hero button {
+	border-radius: 0.5rem;
+	padding: 0.6rem 1.4rem;
+	border: none;
+	background: #0066ff;
+	color: white;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.hero button:hover {
+	background: #004bd6;
+}
+
+.status {
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+	gap: 1.5rem;
+}
+
+.card {
+	border-radius: 0.75rem;
+	padding: 1.25rem;
+	border: 1px solid color-mix(in srgb, canvastext 10%, transparent);
+	background-color: color-mix(in srgb, canvas 95%, canvastext 5%);
+	box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.08);
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.card header {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+}
+
+.icon {
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 0.75rem;
+	object-fit: cover;
+	background: color-mix(in srgb, canvastext 10%, transparent);
+}
+
+.title {
+	margin: 0;
+	font-size: 1.1rem;
+}
+
+.meta {
+	margin: 0.15rem 0 0;
+	color: color-mix(in srgb, canvastext 70%, transparent);
+	font-size: 0.9rem;
+}
+
+.description {
+	margin: 0;
+	font-size: 0.95rem;
+	color: color-mix(in srgb, canvastext 85%, transparent);
+}
+
+.details {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	gap: 0.75rem;
+	margin: 0;
+}
+
+.details div {
+	background: color-mix(in srgb, canvastext 5%, transparent);
+	border-radius: 0.5rem;
+	padding: 0.6rem;
+}
+
+.details dt {
+	margin: 0;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: color-mix(in srgb, canvastext 60%, transparent);
+}
+
+.details dd {
+	margin: 0.4rem 0 0;
+	font-size: 0.95rem;
+}
+
+.actions {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.actions a {
+	flex: 1;
+	text-align: center;
+	border-radius: 0.5rem;
+	padding: 0.6rem 0.75rem;
+	background: color-mix(in srgb, canvastext 10%, transparent);
+	text-decoration: none;
+	color: inherit;
+	font-weight: 600;
+}
+
+.actions a:hover {
+	background: color-mix(in srgb, canvastext 18%, transparent);
+}
+
+@media (max-width: 600px) {
+	.hero {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.hero button {
+		align-self: stretch;
+	}
+}

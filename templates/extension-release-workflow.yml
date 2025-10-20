@@ -1,0 +1,117 @@
+name: Release VSIX
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Version bump (patch/minor/major)'
+        required: false
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_INCREMENT: ${{ vars.RELEASE_INCREMENT || 'patch' }}
+
+jobs:
+  release:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'chore: release') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure git author
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Determine version increment
+        id: increment
+        run: |
+          set -eo pipefail
+          manual_input="${{ github.event.inputs.increment }}"
+          if [ -n "$manual_input" ]; then
+            echo "increment=$manual_input" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          default_increment="${RELEASE_INCREMENT:-patch}"
+          current_version=$(node -p "require('./package.json').version")
+          major=${current_version%%.*}
+          rest=${current_version#*.}
+          minor=${rest%%.*}
+          prefix="v${major}.${minor}."
+          first_tag=$(git tag --list "${prefix}*" --sort=version:refname | head -n 1)
+
+          if [ -z "$first_tag" ]; then
+            echo "increment=$default_increment" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          total=0
+          while IFS="\t" read -r added removed path; do
+            if [ "$added" = "-" ] || [ "$removed" = "-" ]; then
+              continue
+            fi
+            total=$((total + added + removed))
+          done < <(git diff --numstat "$first_tag"..HEAD -- . \
+            ":(exclude)*.css" \
+            ":(exclude)*.md" \
+            ":(exclude)*.html" \
+            ":(exclude)index.json")
+
+          if [ "$total" -ge 500 ]; then
+            echo "increment=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "increment=$default_increment" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump version and create tag
+        id: version
+        env:
+          INCREMENT: ${{ steps.increment.outputs.increment }}
+        run: |
+          set -eo pipefail
+          version_ref=$(npm version "$INCREMENT" -m "chore: release v%s")
+          version="${version_ref#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Package VSIX
+        run: npx @vscode/vsce package --out ./dist
+
+      - name: Push commit and tag
+        run: |
+          git push origin HEAD
+          git push origin "v${{ steps.version.outputs.version }}"
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          files: dist/*.vsix
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
