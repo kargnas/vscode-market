@@ -1,9 +1,135 @@
 {
-  "generatedAt": "2025-10-20T18:01:54.575Z",
+  "generatedAt": "2025-10-20T19:31:38.208Z",
   "source": {
     "owner": "kargnas",
     "prefix": "vscode-ext-",
     "repositoryCount": 2
   },
-  "extensions": []
+  "extensions": [
+    {
+      "extensionId": "8d93fb42-4dc3-3463-b22e-b6740a6ef782",
+      "extensionName": "always-screencast",
+      "displayName": "Always Screencast",
+      "shortDescription": "Automatically keeps VS Code Screencast Mode enabled on every startup.",
+      "publisher": {
+        "displayName": "kargnas",
+        "publisherId": "acf93230-47f1-c264-17fc-a026a1cac688",
+        "publisherName": "kargnas",
+        "domain": null,
+        "isDomainVerified": false
+      },
+      "versions": [
+        {
+          "version": "0.1.2",
+          "lastUpdated": "2025-10-20T19:31:08Z",
+          "assetUri": null,
+          "fallbackAssetUri": null,
+          "files": [
+            {
+              "assetType": "Microsoft.VisualStudio.Code.Manifest",
+              "source": "/files/kargnas.always-screencast/0.1.2/extension.vsixmanifest"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+              "source": "/files/kargnas.always-screencast/0.1.2/package.json"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+              "source": "/files/kargnas.always-screencast/0.1.2/readme.md"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+              "source": "/extensions/kargnas.always-screencast/kargnas.always-screencast-0.1.2.vsix"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+              "source": "/files/kargnas.always-screencast/0.1.2/extension.vsixmanifest"
+            }
+          ],
+          "properties": [],
+          "targetPlatform": "universal",
+          "sha256": "3dc05ea5ff8e26f9cad3f78312a1f5b97320d01c26e9a9f48ff50a7646ec8857",
+          "size": 5845
+        }
+      ],
+      "statistics": [],
+      "tags": [],
+      "categories": [
+        "Other"
+      ],
+      "releaseDate": "2025-10-20T19:30:51Z",
+      "publishedDate": "2025-10-20T19:31:08Z",
+      "lastUpdated": "2025-10-20T19:31:08Z",
+      "flags": "",
+      "identifier": "kargnas.always-screencast",
+      "repository": "https://github.com/kargnas/vscode-ext-always-screencast",
+      "homepage": null,
+      "license": null
+    },
+    {
+      "extensionId": "1ff7b63c-d9b7-e39a-2de2-4ccdc5b84795",
+      "extensionName": "kars-commit-ai",
+      "displayName": "kars - Commit AI",
+      "shortDescription": "Generate smart commit messages from staged diffs via OpenRouter. One button next to the star. Logs every request.",
+      "publisher": {
+        "displayName": "kars",
+        "publisherId": "e2728d2b-1ee8-3405-3588-b15854c01728",
+        "publisherName": "kars",
+        "domain": null,
+        "isDomainVerified": false
+      },
+      "versions": [
+        {
+          "version": "0.3.32",
+          "lastUpdated": "2025-10-20T19:30:27Z",
+          "assetUri": null,
+          "fallbackAssetUri": null,
+          "files": [
+            {
+              "assetType": "Microsoft.VisualStudio.Code.Manifest",
+              "source": "/files/kars.kars-commit-ai/0.3.32/extension.vsixmanifest"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+              "source": "/files/kars.kars-commit-ai/0.3.32/package.json"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+              "source": "/files/kars.kars-commit-ai/0.3.32/icon.png"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+              "source": "/files/kars.kars-commit-ai/0.3.32/readme.md"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+              "source": "/extensions/kars.kars-commit-ai/kars.kars-commit-ai-0.3.32.vsix"
+            },
+            {
+              "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+              "source": "/files/kars.kars-commit-ai/0.3.32/extension.vsixmanifest"
+            }
+          ],
+          "properties": [],
+          "targetPlatform": "universal",
+          "sha256": "3f49ed45e9f916d0c778493095fe1f3199b9b54adee8f3f9503303da0ed990c2",
+          "size": 76774
+        }
+      ],
+      "statistics": [],
+      "tags": [],
+      "categories": [
+        "SCM",
+        "Other"
+      ],
+      "releaseDate": "2025-10-20T19:30:24Z",
+      "publishedDate": "2025-10-20T19:30:27Z",
+      "lastUpdated": "2025-10-20T19:30:27Z",
+      "flags": "",
+      "identifier": "kars.kars-commit-ai",
+      "repository": "https://github.com/opgginc/kars-commit-ai",
+      "homepage": "https://kargn.as",
+      "license": "MIT"
+    }
+  ]
 }

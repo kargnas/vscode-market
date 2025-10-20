@@ -1,0 +1,199 @@
+{
+  "name": "kars-commit-ai",
+  "displayName": "kars - Commit AI",
+  "description": "Generate smart commit messages from staged diffs via OpenRouter. One button next to the star. Logs every request.",
+  "version": "0.3.32",
+  "publisher": "kars",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "SCM",
+    "Other"
+  ],
+  "icon": "media/icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "karsCommitAI.generate",
+        "title": "AI Commit",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "karsCommitAI.pingOpenRouter",
+        "title": "Commit AI: Ping OpenRouter"
+      },
+      {
+        "command": "karsCommitAI.showLastPayload",
+        "title": "Commit AI: Show Last Payload"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "karsCommitAI.generate",
+          "group": "navigation",
+          "when": "scmProvider == git",
+          "icon": "$(sparkle)"
+        }
+      ],
+      "scm/inputBox": [
+        {
+          "command": "karsCommitAI.generate",
+          "group": "kars",
+          "when": "scmProvider == git",
+          "icon": "$(wand)"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "kars - Commit AI",
+      "properties": {
+        "karsCommitAI.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenRouter API key"
+        },
+        "karsCommitAI.model": {
+          "type": "string",
+          "default": "google/gemini-2.5-flash-lite",
+          "description": "Model id"
+        },
+        "karsCommitAI.endpoint": {
+          "type": "string",
+          "default": "https://openrouter.ai/api/v1/chat/completions",
+          "description": "OpenRouter endpoint"
+        },
+        "karsCommitAI.endpointRewrite": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto-rewrite legacy endpoints (e.g., /v1/responses -> /alpha/responses)."
+        },
+        "karsCommitAI.transport": {
+          "type": "string",
+          "enum": [
+            "fetch",
+            "curl"
+          ],
+          "default": "fetch",
+          "description": "HTTP transport (curl is robust behind strict proxies)."
+        },
+        "karsCommitAI.requestTimeoutMs": {
+          "type": "number",
+          "default": 25000
+        },
+        "karsCommitAI.logRawResponse": {
+          "type": "boolean",
+          "default": true
+        },
+        "karsCommitAI.contextIncludeGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*"
+          ]
+        },
+        "karsCommitAI.contextIgnoreGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*.lock",
+            "dist/**",
+            "build/**",
+            "out/**",
+            "**/*.svg",
+            "**/*.png",
+            "**/*.jpg"
+          ]
+        },
+        "karsCommitAI.maxFilePatchBytes": {
+          "type": "number",
+          "default": 12000
+        },
+        "karsCommitAI.maxPatchBytes": {
+          "type": "number",
+          "default": 50000
+        },
+        "karsCommitAI.previousCommitLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "Max first-line previous commits to include in the prompt."
+        },
+        "karsCommitAI.openTabsLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "How many open editor tabs to list in the context (0 to disable)."
+        },
+        "karsCommitAI.terminalLogLines": {
+          "type": "number",
+          "default": 20,
+          "description": "How many recent integrated terminal lines to include (0 to disable)."
+        },
+        "karsCommitAI.projectTreeMaxEntries": {
+          "type": "number",
+          "default": 400,
+          "description": "Max rendered lines for the project tree section."
+        },
+        "karsCommitAI.heavyDiffMaxLines": {
+          "type": "number",
+          "default": 500,
+          "description": "Max lines per file snapshot appended when a file shows 3+ staged hunks."
+        },
+        "karsCommitAI.heavyDiffMaxFiles": {
+          "type": "number",
+          "default": 3,
+          "description": "Max number of staged file snapshots to append for heavy diffs."
+        },
+        "karsCommitAI.logPromptMaxChars": {
+          "type": "number",
+          "default": 0,
+          "description": "Max characters to log for system/user prompts (0 = unlimited, useful for debugging full prompts)."
+        },
+        "karsCommitAI.referer": {
+          "type": "string",
+          "default": "https://kargn.as"
+        },
+        "karsCommitAI.title": {
+          "type": "string",
+          "default": "kars - Commit AI"
+        },
+        "karsCommitAI.commitLanguage": {
+          "type": "string",
+          "default": "auto",
+          "description": "Preferred language for commit subject/body (auto keeps default British English)."
+        },
+        "karsCommitAI.systemPrompt": {
+          "type": "string",
+          "default": "You write excellent Conventional Commits for engineers and PMs."
+        },
+        "dish-ai-commit.features.branchName.systemPrompt": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opgginc/kars-commit-ai"
+  },
+  "bugs": {
+    "url": "https://github.com/opgginc/kars-commit-ai/issues"
+  },
+  "homepage": "https://kargn.as",
+  "license": "MIT",
+  "devDependencies": {
+    "@vscode/vsce": "^3.6.2"
+  },
+  "scripts": {
+    "package:install": "./scripts/package-and-install.sh"
+  }
+}

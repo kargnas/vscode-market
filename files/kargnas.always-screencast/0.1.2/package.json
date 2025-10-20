@@ -1,0 +1,24 @@
+{
+  "name": "always-screencast",
+  "displayName": "Always Screencast",
+  "description": "Automatically keeps VS Code Screencast Mode enabled on every startup.",
+  "version": "0.1.2",
+  "publisher": "kargnas",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {},
+  "scripts": {
+    "lint": "echo \"No linting configured\"",
+    "package": "npx --yes @vscode/vsce package",
+    "install:vscode": "npm run package && code --install-extension always-screencast-*.vsix"
+  },
+  "dependencies": {}
+}
