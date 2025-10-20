@@ -119,6 +119,29 @@ const writeFileIfChanged = async (filepath, data) => {
 	await fs.writeFile(filepath, content);
 };
 
+const loadExistingIndex = async () => {
+	if (!existsSync(INDEX_PATH)) return null;
+	try {
+		const raw = await fs.readFile(INDEX_PATH, "utf-8");
+		return JSON.parse(raw);
+	} catch (error) {
+		console.warn(
+			chalk.yellow(
+				`Warning: failed to parse existing index.json (${error.message}).`,
+			),
+		);
+		return null;
+	}
+};
+
+const indexSnapshot = (index) => {
+	if (!index) return null;
+	return {
+		source: index.source,
+		extensions: index.extensions,
+	};
+};
+
 const buildFileUrl = (relativePath) => {
 	const clean = relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
 	if (!BASE_URL) return `/${clean}`;
@@ -394,6 +417,7 @@ const main = async () => {
 	}
 
 	await cleanupDirs(extensions);
+	const existingIndex = await loadExistingIndex();
 
 	const index = {
 		generatedAt: new Date().toISOString(),
@@ -407,10 +431,33 @@ const main = async () => {
 		),
 	};
 
-	await fs.writeFile(INDEX_PATH, `${JSON.stringify(index, null, 2)}\n`);
-	console.log(
-		chalk.blue(`index.json updated with ${extensions.length} extensions.`),
-	);
+	const previousSnapshot = indexSnapshot(existingIndex);
+	const nextSnapshot = indexSnapshot(index);
+	const hasChanged =
+		!previousSnapshot ||
+		JSON.stringify(previousSnapshot) !== JSON.stringify(nextSnapshot);
+
+	if (!hasChanged && existingIndex?.generatedAt) {
+		index.generatedAt = existingIndex.generatedAt;
+	}
+
+	const serialized = `${JSON.stringify(index, null, 2)}\n`;
+
+	if (hasChanged) {
+		await fs.writeFile(INDEX_PATH, serialized);
+		console.log(
+			chalk.blue(
+				`index.json updated with ${extensions.length} extensions (changes detected).`,
+			),
+		);
+	} else {
+		await writeFileIfChanged(INDEX_PATH, serialized);
+		console.log(
+			chalk.blue(
+				`No catalog changes detected; index.json timestamp preserved (${extensions.length} extensions).`,
+			),
+		);
+	}
 };
 
 main().catch((error) => {
