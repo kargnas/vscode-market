@@ -1,4 +1,4 @@
-# kars - Commit AI (source v0.2.2)
+# kargnas - Commit AI (source v0.2.2)
 
 VS Code extension to generate Git commit messages via OpenRouter.
 
@@ -26,7 +26,7 @@ VS Code extension to generate Git commit messages via OpenRouter.
 - `npm run package:install`: packages via vsce into `output/` then force-installs the generated VSIX into your local VS Code.
 - `npx vsce package --no-yarn --out output/<name>.vsix`: quick manual package step if you just want the VSIX artifact.
 - `code --install-extension <vsix-path> --force`: install a built VSIX (useful if you copied it elsewhere).
-- `code --uninstall-extension kars.kars-commit-ai`: remove the installed copy before reinstalling from marketplace or another build.
+- `code --uninstall-extension kargnas.kargnas-commit-ai`: remove the installed copy before reinstalling from marketplace or another build.
 
 ## Context Pipeline
 - 자동으로 리포 메타/브랜치 힌트/파일 요약/프로젝트 트리를 수집해 LLM에 JSON 구조로 전달합니다.
@@ -36,25 +36,27 @@ VS Code extension to generate Git commit messages via OpenRouter.
 - Body array entries use succinct fragments such as `env routing cleanup` or `api baseurl addition`.
 - Keep each fragment within 12 words, omit punctuation, and mention the touched artifact/key/value.
 - Finish fragments with action nouns like `cleanup`, `addition`, `removal`, or `sync` for quick scanning.
-- The `karsCommitAI.commitLanguage` setting still governs localization for these fragments.
+- The `kargnasCommitAI.commitLanguage` setting still governs localization for these fragments (legacy `karsCommitAI.*` keys keep working but show as deprecated).
 
 ## Settings (examples)
 ```json
 {
-  "karsCommitAI.apiKey": "sk-or-...",
-  "karsCommitAI.model": "google/gemini-2.5-flash-lite",
-  "karsCommitAI.endpoint": "https://openrouter.ai/api/v1/chat/completions",
-  "karsCommitAI.endpointRewrite": true,
-  "karsCommitAI.transport": "fetch",
-  "karsCommitAI.commitLanguage": "ko",
-  "karsCommitAI.logPromptMaxChars": 0
+  "kargnasCommitAI.apiKey": "sk-or-...",
+  "kargnasCommitAI.model": "google/gemini-2.5-flash-lite",
+  "kargnasCommitAI.endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "kargnasCommitAI.endpointRewrite": true,
+  "kargnasCommitAI.transport": "fetch",
+  "kargnasCommitAI.commitLanguage": "ko",
+  "kargnasCommitAI.logPromptMaxChars": 0
 }
 ```
 
+기존 `karsCommitAI.*` 키는 그대로 작동하지만 VS Code에서 사용 중단 경고가 뜬다.
+
 ### 🆕 New Settings
-- **`karsCommitAI.commitLanguage`** (default: `"auto"`)
+- **`kargnasCommitAI.commitLanguage`** (default: `"auto"`)
   - Subject/body language preference for generated commits. Keep as `"auto"` for English, or supply locale codes like `"ko"`, `"ja"`, `"en-US"`.
-- **`karsCommitAI.logPromptMaxChars`** (default: `0`)
+- **`kargnasCommitAI.logPromptMaxChars`** (default: `0`)
   - `0` = unlimited (logs entire prompt - useful for debugging)
   - `> 0` = truncates prompt log to N characters
   - 프롬프트 전체를 보고 싶으면 `0`으로 설정하세요!

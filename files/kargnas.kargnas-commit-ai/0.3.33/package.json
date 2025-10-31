@@ -1,0 +1,351 @@
+{
+  "name": "kargnas-commit-ai",
+  "displayName": "kargnas - Commit AI",
+  "description": "Generate smart commit messages from staged diffs via OpenRouter. One button next to the star. Logs every request.",
+  "version": "0.3.33",
+  "publisher": "kargnas",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "SCM",
+    "Other"
+  ],
+  "icon": "media/icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "kargnasCommitAI.generate",
+        "title": "AI Commit",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "kargnasCommitAI.pingOpenRouter",
+        "title": "Commit AI: Ping OpenRouter"
+      },
+      {
+        "command": "kargnasCommitAI.showLastPayload",
+        "title": "Commit AI: Show Last Payload"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "kargnasCommitAI.generate",
+          "group": "navigation",
+          "when": "scmProvider == git",
+          "icon": "$(sparkle)"
+        }
+      ],
+      "scm/inputBox": [
+        {
+          "command": "kargnasCommitAI.generate",
+          "group": "kargnas",
+          "when": "scmProvider == git",
+          "icon": "$(wand)"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "kargnas - Commit AI",
+      "properties": {
+        "kargnasCommitAI.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenRouter API key"
+        },
+        "kargnasCommitAI.model": {
+          "type": "string",
+          "default": "google/gemini-2.5-flash-lite",
+          "description": "Model id"
+        },
+        "kargnasCommitAI.endpoint": {
+          "type": "string",
+          "default": "https://openrouter.ai/api/v1/chat/completions",
+          "description": "OpenRouter endpoint"
+        },
+        "kargnasCommitAI.endpointRewrite": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto-rewrite legacy endpoints (e.g., /v1/responses -> /alpha/responses)."
+        },
+        "kargnasCommitAI.transport": {
+          "type": "string",
+          "enum": [
+            "fetch",
+            "curl"
+          ],
+          "default": "fetch",
+          "description": "HTTP transport (curl is robust behind strict proxies)."
+        },
+        "kargnasCommitAI.requestTimeoutMs": {
+          "type": "number",
+          "default": 25000
+        },
+        "kargnasCommitAI.logRawResponse": {
+          "type": "boolean",
+          "default": true
+        },
+        "kargnasCommitAI.contextIncludeGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*"
+          ]
+        },
+        "kargnasCommitAI.contextIgnoreGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*.lock",
+            "dist/**",
+            "build/**",
+            "out/**",
+            "**/*.svg",
+            "**/*.png",
+            "**/*.jpg"
+          ]
+        },
+        "kargnasCommitAI.maxFilePatchBytes": {
+          "type": "number",
+          "default": 12000
+        },
+        "kargnasCommitAI.maxPatchBytes": {
+          "type": "number",
+          "default": 50000
+        },
+        "kargnasCommitAI.previousCommitLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "Max first-line previous commits to include in the prompt."
+        },
+        "kargnasCommitAI.openTabsLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "How many open editor tabs to list in the context (0 to disable)."
+        },
+        "kargnasCommitAI.terminalLogLines": {
+          "type": "number",
+          "default": 20,
+          "description": "How many recent integrated terminal lines to include (0 to disable)."
+        },
+        "kargnasCommitAI.projectTreeMaxEntries": {
+          "type": "number",
+          "default": 400,
+          "description": "Max rendered lines for the project tree section."
+        },
+        "kargnasCommitAI.heavyDiffMaxLines": {
+          "type": "number",
+          "default": 500,
+          "description": "Max lines per file snapshot appended when a file shows 3+ staged hunks."
+        },
+        "kargnasCommitAI.heavyDiffMaxFiles": {
+          "type": "number",
+          "default": 3,
+          "description": "Max number of staged file snapshots to append for heavy diffs."
+        },
+        "kargnasCommitAI.logPromptMaxChars": {
+          "type": "number",
+          "default": 0,
+          "description": "Max characters to log for system/user prompts (0 = unlimited, useful for debugging full prompts)."
+        },
+        "kargnasCommitAI.referer": {
+          "type": "string",
+          "default": "https://kargn.as"
+        },
+        "kargnasCommitAI.title": {
+          "type": "string",
+          "default": "kargnas - Commit AI"
+        },
+        "kargnasCommitAI.commitLanguage": {
+          "type": "string",
+          "default": "auto",
+          "description": "Preferred language for commit subject/body (auto keeps default British English)."
+        },
+        "kargnasCommitAI.systemPrompt": {
+          "type": "string",
+          "default": "You write excellent Conventional Commits for engineers and PMs."
+        },
+        "karsCommitAI.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Deprecated alias for kargnasCommitAI.apiKey.",
+          "deprecationMessage": "Rename to kargnasCommitAI.apiKey."
+        },
+        "karsCommitAI.model": {
+          "type": "string",
+          "default": "google/gemini-2.5-flash-lite",
+          "description": "Deprecated alias for kargnasCommitAI.model.",
+          "deprecationMessage": "Rename to kargnasCommitAI.model."
+        },
+        "karsCommitAI.endpoint": {
+          "type": "string",
+          "default": "https://openrouter.ai/api/v1/chat/completions",
+          "description": "Deprecated alias for kargnasCommitAI.endpoint.",
+          "deprecationMessage": "Rename to kargnasCommitAI.endpoint."
+        },
+        "karsCommitAI.endpointRewrite": {
+          "type": "boolean",
+          "default": true,
+          "description": "Deprecated alias for kargnasCommitAI.endpointRewrite.",
+          "deprecationMessage": "Rename to kargnasCommitAI.endpointRewrite."
+        },
+        "karsCommitAI.transport": {
+          "type": "string",
+          "enum": [
+            "fetch",
+            "curl"
+          ],
+          "default": "fetch",
+          "description": "Deprecated alias for kargnasCommitAI.transport.",
+          "deprecationMessage": "Rename to kargnasCommitAI.transport."
+        },
+        "karsCommitAI.requestTimeoutMs": {
+          "type": "number",
+          "default": 25000,
+          "description": "Deprecated alias for kargnasCommitAI.requestTimeoutMs.",
+          "deprecationMessage": "Rename to kargnasCommitAI.requestTimeoutMs."
+        },
+        "karsCommitAI.logRawResponse": {
+          "type": "boolean",
+          "default": true,
+          "description": "Deprecated alias for kargnasCommitAI.logRawResponse.",
+          "deprecationMessage": "Rename to kargnasCommitAI.logRawResponse."
+        },
+        "karsCommitAI.contextIncludeGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*"
+          ],
+          "description": "Deprecated alias for kargnasCommitAI.contextIncludeGlobs.",
+          "deprecationMessage": "Rename to kargnasCommitAI.contextIncludeGlobs."
+        },
+        "karsCommitAI.contextIgnoreGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*.lock",
+            "dist/**",
+            "build/**",
+            "out/**",
+            "**/*.svg",
+            "**/*.png",
+            "**/*.jpg"
+          ],
+          "description": "Deprecated alias for kargnasCommitAI.contextIgnoreGlobs.",
+          "deprecationMessage": "Rename to kargnasCommitAI.contextIgnoreGlobs."
+        },
+        "karsCommitAI.maxFilePatchBytes": {
+          "type": "number",
+          "default": 12000,
+          "description": "Deprecated alias for kargnasCommitAI.maxFilePatchBytes.",
+          "deprecationMessage": "Rename to kargnasCommitAI.maxFilePatchBytes."
+        },
+        "karsCommitAI.maxPatchBytes": {
+          "type": "number",
+          "default": 50000,
+          "description": "Deprecated alias for kargnasCommitAI.maxPatchBytes.",
+          "deprecationMessage": "Rename to kargnasCommitAI.maxPatchBytes."
+        },
+        "karsCommitAI.previousCommitLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "Deprecated alias for kargnasCommitAI.previousCommitLimit.",
+          "deprecationMessage": "Rename to kargnasCommitAI.previousCommitLimit."
+        },
+        "karsCommitAI.openTabsLimit": {
+          "type": "number",
+          "default": 10,
+          "description": "Deprecated alias for kargnasCommitAI.openTabsLimit.",
+          "deprecationMessage": "Rename to kargnasCommitAI.openTabsLimit."
+        },
+        "karsCommitAI.terminalLogLines": {
+          "type": "number",
+          "default": 20,
+          "description": "Deprecated alias for kargnasCommitAI.terminalLogLines.",
+          "deprecationMessage": "Rename to kargnasCommitAI.terminalLogLines."
+        },
+        "karsCommitAI.projectTreeMaxEntries": {
+          "type": "number",
+          "default": 400,
+          "description": "Deprecated alias for kargnasCommitAI.projectTreeMaxEntries.",
+          "deprecationMessage": "Rename to kargnasCommitAI.projectTreeMaxEntries."
+        },
+        "karsCommitAI.heavyDiffMaxLines": {
+          "type": "number",
+          "default": 500,
+          "description": "Deprecated alias for kargnasCommitAI.heavyDiffMaxLines.",
+          "deprecationMessage": "Rename to kargnasCommitAI.heavyDiffMaxLines."
+        },
+        "karsCommitAI.heavyDiffMaxFiles": {
+          "type": "number",
+          "default": 3,
+          "description": "Deprecated alias for kargnasCommitAI.heavyDiffMaxFiles.",
+          "deprecationMessage": "Rename to kargnasCommitAI.heavyDiffMaxFiles."
+        },
+        "karsCommitAI.logPromptMaxChars": {
+          "type": "number",
+          "default": 0,
+          "description": "Deprecated alias for kargnasCommitAI.logPromptMaxChars.",
+          "deprecationMessage": "Rename to kargnasCommitAI.logPromptMaxChars."
+        },
+        "karsCommitAI.referer": {
+          "type": "string",
+          "default": "https://kargn.as",
+          "description": "Deprecated alias for kargnasCommitAI.referer.",
+          "deprecationMessage": "Rename to kargnasCommitAI.referer."
+        },
+        "karsCommitAI.title": {
+          "type": "string",
+          "default": "kargnas - Commit AI",
+          "description": "Deprecated alias for kargnasCommitAI.title.",
+          "deprecationMessage": "Rename to kargnasCommitAI.title."
+        },
+        "karsCommitAI.commitLanguage": {
+          "type": "string",
+          "default": "auto",
+          "description": "Deprecated alias for kargnasCommitAI.commitLanguage.",
+          "deprecationMessage": "Rename to kargnasCommitAI.commitLanguage."
+        },
+        "karsCommitAI.systemPrompt": {
+          "type": "string",
+          "default": "You write excellent Conventional Commits for engineers and PMs.",
+          "description": "Deprecated alias for kargnasCommitAI.systemPrompt.",
+          "deprecationMessage": "Rename to kargnasCommitAI.systemPrompt."
+        },
+        "dish-ai-commit.features.branchName.systemPrompt": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opgginc/kars-commit-ai"
+  },
+  "bugs": {
+    "url": "https://github.com/opgginc/kars-commit-ai/issues"
+  },
+  "homepage": "https://kargn.as",
+  "license": "MIT",
+  "devDependencies": {
+    "@vscode/vsce": "^3.6.2"
+  },
+  "scripts": {
+    "package:install": "./scripts/package-and-install.sh"
+  }
+}

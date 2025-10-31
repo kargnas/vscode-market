@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-10-20T19:31:38.208Z",
+  "generatedAt": "2025-10-31T16:01:45.895Z",
   "source": {
     "owner": "kargnas",
     "prefix": "vscode-ext-",
@@ -67,53 +67,53 @@
       "license": null
     },
     {
-      "extensionId": "1ff7b63c-d9b7-e39a-2de2-4ccdc5b84795",
-      "extensionName": "kars-commit-ai",
-      "displayName": "kars - Commit AI",
+      "extensionId": "a145e61e-65bc-44e3-a1a6-58789e92a9d1",
+      "extensionName": "kargnas-commit-ai",
+      "displayName": "kargnas - Commit AI",
       "shortDescription": "Generate smart commit messages from staged diffs via OpenRouter. One button next to the star. Logs every request.",
       "publisher": {
-        "displayName": "kars",
-        "publisherId": "e2728d2b-1ee8-3405-3588-b15854c01728",
-        "publisherName": "kars",
+        "displayName": "kargnas",
+        "publisherId": "acf93230-47f1-c264-17fc-a026a1cac688",
+        "publisherName": "kargnas",
         "domain": null,
         "isDomainVerified": false
       },
       "versions": [
         {
-          "version": "0.3.32",
-          "lastUpdated": "2025-10-20T19:30:27Z",
+          "version": "0.3.33",
+          "lastUpdated": "2025-10-31T15:02:22Z",
           "assetUri": null,
           "fallbackAssetUri": null,
           "files": [
             {
               "assetType": "Microsoft.VisualStudio.Code.Manifest",
-              "source": "/files/kars.kars-commit-ai/0.3.32/extension.vsixmanifest"
+              "source": "/files/kargnas.kargnas-commit-ai/0.3.33/extension.vsixmanifest"
             },
             {
               "assetType": "Microsoft.VisualStudio.Services.Content.Details",
-              "source": "/files/kars.kars-commit-ai/0.3.32/package.json"
+              "source": "/files/kargnas.kargnas-commit-ai/0.3.33/package.json"
             },
             {
               "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
-              "source": "/files/kars.kars-commit-ai/0.3.32/icon.png"
+              "source": "/files/kargnas.kargnas-commit-ai/0.3.33/icon.png"
             },
             {
               "assetType": "Microsoft.VisualStudio.Services.Content.Details",
-              "source": "/files/kars.kars-commit-ai/0.3.32/readme.md"
+              "source": "/files/kargnas.kargnas-commit-ai/0.3.33/readme.md"
             },
             {
               "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
-              "source": "/extensions/kars.kars-commit-ai/kars.kars-commit-ai-0.3.32.vsix"
+              "source": "/extensions/kargnas.kargnas-commit-ai/kargnas.kargnas-commit-ai-0.3.33.vsix"
             },
             {
               "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
-              "source": "/files/kars.kars-commit-ai/0.3.32/extension.vsixmanifest"
+              "source": "/files/kargnas.kargnas-commit-ai/0.3.33/extension.vsixmanifest"
             }
           ],
           "properties": [],
           "targetPlatform": "universal",
-          "sha256": "3f49ed45e9f916d0c778493095fe1f3199b9b54adee8f3f9503303da0ed990c2",
-          "size": 76774
+          "sha256": "567e9a6031567ae53cf2e37af37eee4f172e734231e047b1a5780e7765bb6e07",
+          "size": 77554
         }
       ],
       "statistics": [],
@@ -122,11 +122,11 @@
         "SCM",
         "Other"
       ],
-      "releaseDate": "2025-10-20T19:30:24Z",
-      "publishedDate": "2025-10-20T19:30:27Z",
-      "lastUpdated": "2025-10-20T19:30:27Z",
+      "releaseDate": "2025-10-31T15:02:17Z",
+      "publishedDate": "2025-10-31T15:02:22Z",
+      "lastUpdated": "2025-10-31T15:02:22Z",
       "flags": "",
-      "identifier": "kars.kars-commit-ai",
+      "identifier": "kargnas.kargnas-commit-ai",
       "repository": "https://github.com/opgginc/kars-commit-ai",
       "homepage": "https://kargn.as",
       "license": "MIT"

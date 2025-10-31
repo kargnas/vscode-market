@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 		<Metadata>
-			<Identity Language="en-US" Id="kars-commit-ai" Version="0.3.32" Publisher="kars" />
-			<DisplayName>kars - Commit AI</DisplayName>
+			<Identity Language="en-US" Id="kargnas-commit-ai" Version="0.3.33" Publisher="kargnas" />
+			<DisplayName>kargnas - Commit AI</DisplayName>
 			<Description xml:space="preserve">Generate smart commit messages from staged diffs via OpenRouter. One button next to the star. Logs every request.</Description>
 			<Tags></Tags>
 			<Categories>SCM,Other</Categories>
